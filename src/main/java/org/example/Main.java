@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Created by fanat1kq on 28/01/2024.
  * implements users, indications
- * using HashMap
+ * using HashMap//
  */
 
 public class Main {
@@ -28,6 +28,7 @@ public class Main {
      */
     public static void startApp() throws ParseException {
         while(true) {
+            System.out.println("Внимание");
             System.out.println("нажмите цифру желаемого действия");
             System.out.println("1.Войти");
             System.out.println("2.Создать пользователя");
