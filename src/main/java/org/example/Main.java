@@ -72,7 +72,6 @@ public class Main {
                     System.out.println("Права доступа - " + map.get(user));
                     AppLoop();
                 } else System.out.println("такого пользователя нет либо неправильный пароль, попробкйте еще раз");
-
             }
         }}
 
