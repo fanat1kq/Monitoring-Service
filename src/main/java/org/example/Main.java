@@ -2,6 +2,7 @@ package org.example;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.Year;
 import java.time.YearMonth;
 import java.util.*;
 
@@ -16,9 +17,11 @@ public class Main {
     static Indications indic =new Indications();
     static HashMap<User,Role> map=new HashMap<>();
     static HashMap<Indications, User> indication=new HashMap<>();
+    static List<String> readings=new ArrayList<>();
 
     public static void main(String[] args) throws ParseException {
         while(true) {
+            defalt();
             startApp();
         }
 
@@ -112,6 +115,7 @@ public class Main {
     public static void AppLoop() throws ParseException {
 
 while (true){
+
         System.out.println("1.Получить актуальное показание");
         System.out.println("2.Подать показания");
         System.out.println("3.Получить показания в конкретный месяц");
@@ -141,6 +145,13 @@ while (true){
             System.out.println("попробуйте еще раз");
         }}
     }
+
+    private static void defalt() {
+        readings.add("горячая вода");
+        readings.add("холодная вода");
+        readings.add("отопление");
+    }
+
     /**
      * get actual counter
      * @return HashMap<Indication,User>
@@ -166,9 +177,11 @@ while (true){
      * put counter in HashMap
      */
     public static void putCounter()  {
-        System.out.println("Введите название показания");
+        System.out.println("Введите название показания из списка");
+        System.out.println(readings);
         Scanner scanner = new Scanner(System.in);
         String name = scanner.nextLine();
+        if (readings.contains(name)){
         System.out.println("Введите количество показания");
         Scanner scanner1 = new Scanner(System.in);
         int value = Integer.parseInt(scanner1.nextLine());
@@ -186,9 +199,10 @@ while (true){
             }
             System.out.println("в это месяце уже вводили показания, попробуйте другой месяц");
         }
-
         Indications indications1 = new Indications(name, value, java.time.LocalDate.of(year, month, day));
-        indication.put(indications1,user);
+        indication.put(indications1,user);}
+        else {System.out.println("такого нет");
+        }
     }
 
     /**
@@ -201,9 +215,13 @@ while (true){
         System.out.println("Введите месяц цифрой от 1 до 12");
         Scanner in = new Scanner(System.in);
         int month = Integer.parseInt(in.nextLine());
+        System.out.println("Введите год");
+        Scanner in2 = new Scanner(System.in);
+        int year = Integer.parseInt(in2.nextLine());
         for (Indications key : indication.keySet()){
-            if (key.date.getMonth()==(Month.of(month))){
+            if (key.date.getMonth()==(Month.of(month)) && key.date.getYear()==(year)){
                 result.add(key);
+                System.out.println(indication.get(indic));
         }
     }
         System.out.println(result);
@@ -215,9 +233,9 @@ while (true){
      */
     public static HashMap<Indications, User> getCounterStory()  {
         if(map.get(user).equals(Role.ADMIN)){
+            System.out.println(indication);
             return indication;}
         else System.out.println("у вас нет прав просмотра");
-
         return null;
     }
     /**
@@ -227,7 +245,7 @@ while (true){
         System.out.println("Введите новый вид показания");
         Scanner scanner = new Scanner(System.in);
         String name = scanner.nextLine().toLowerCase();
-        Indications indications1 = new Indications(name, 0, java.time.LocalDate.of(1111, 1, 1));
-        indication.put(indications1,user);
+        readings.add(name);
+        System.out.println(readings);
     }
 }
