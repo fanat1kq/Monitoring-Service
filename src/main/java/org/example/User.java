@@ -8,6 +8,26 @@ import java.util.Objects;
 public class User {
     public String name;
     public String password;
+    public Role role;
+    /**
+     * Creates a new User object.
+     * @param name name of the user
+     * @param password passwird of the user
+     *@param role
+     */
+    public User(String name, String password, Role role) {
+        this.name = name;
+        this.password = password;
+        this.role = role;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     @Override
     public String toString() {
@@ -29,16 +49,8 @@ public class User {
     public int hashCode() {
         return Objects.hash(name, password);
     }
-    /**
-     * Creates a new User object.
-     * @param name name of the user
-     * @param password passwird of the user
-     */
-    public User(String name, String password) {
-        this.name = name;
-        this.password = password;
 
-    }
+
 
     public User() {
 
