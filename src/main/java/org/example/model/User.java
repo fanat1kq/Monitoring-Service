@@ -1,8 +1,10 @@
-package org.example;
+package org.example.model;
+
+import org.example.enumerates.Role;
 
 import java.util.Objects;
 /**
- * Created by fanat1kq on 28/01/2024.
+ * Created by fanat1kq on 04/02/2024.
  * This class is responsible for autorizations of users
  */
 public class User {
@@ -13,7 +15,7 @@ public class User {
      * Creates a new User object.
      * @param name name of the user
      * @param password passwird of the user
-     *@param role
+     *@param role role us user
      */
     public User(String name, String password, Role role) {
         this.name = name;

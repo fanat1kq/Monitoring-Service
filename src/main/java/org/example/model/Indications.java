@@ -1,17 +1,17 @@
-package org.example;
+package org.example.model;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
+
 /**
- * Created by fanat1kq on 28/01/2024.
- * This class is responsible for keeping the track of indications values, name, date
+ * Created by fanat1kq on 04/02/2024.
+ * This class is responsible for keeping the track of indications values, name, date and id
  */
 
 public class Indications {
-    String name;
-    int value;
-    LocalDate date;
+    public int indicationsId;
+    public String name;
+    public int value;
+    public LocalDate date;
 
     public Indications() {
 
@@ -74,7 +74,7 @@ public class Indications {
      * Creates a new Indication object.
      * @param name name of the indication
      * @param value value of the indication
-     ** @param date date of putting the indication
+     * @param date date of putting the indication
      */
     public Indications(String name, int value, LocalDate date) {
         this.name = name;

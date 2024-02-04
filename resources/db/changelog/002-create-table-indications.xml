@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
+        logicalFilePath="db/changelog.xml">
+        <changeSet id="2" author="fanat1kq">
+
+            <createTable tableName="indications" >
+                <column name="id" type="BIGINT" autoIncrement="true">
+                    <constraints primaryKey="true" nullable="false"/>
+                </column>
+                <column name="name" type="VARCHAR(255)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="value" type="BIGINT">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="date" type="TIMESTAMP">
+                    <constraints nullable="false"/>
+                </column>
+            </createTable>
+            <createSequence sequenceName="indications_id_seq" startValue="1" incrementBy="1"/>
+        </changeSet>
+</databaseChangeLog>
