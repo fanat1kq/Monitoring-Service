@@ -4,30 +4,31 @@ import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
+import org.example.dbConfig.Config;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
 
 /**
  * class for start Liquibase  which migration of DB
  * method startLiquibase(), do migrations
  */
 public class Liquibase {
+    private static String URL = Config.getUrl();
+    private static String USERNAME = Config.getUsername();
+    private static String PASSWORD = Config.getPassword();
+    private static String SCHEMA = Config.getSchema();
+    private static String FILE = Config.getChangeLogFile();
     public void start() {
         try {
             Connection connection = DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/postgres",
-                    "nikita",
-                    "postgres"
-
+                    URL,
+                    USERNAME,
+                   PASSWORD
             );
-            Statement statement = connection.createStatement();
-            String sql = "CREATE SCHEMA IF NOT EXISTS " + "migration";
-            statement.executeUpdate(sql);
-            statement.close();
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
-            database.setDefaultSchemaName("migration");
-            liquibase.Liquibase liquibase = new liquibase.Liquibase("db/changelog/changelog.xml", new ClassLoaderResourceAccessor(), database);
+            database.setDefaultSchemaName(SCHEMA);
+            liquibase.Liquibase liquibase = new liquibase.Liquibase(FILE, new ClassLoaderResourceAccessor(), database);
             liquibase.update();
             System.out.println("Миграции успешно выполнены!");
 

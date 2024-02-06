@@ -7,14 +7,20 @@
         logicalFilePath="db/changelog.xml">
         <changeSet id="1" author="fanat1kq">
 
+            <sql>
+                CREATE SCHEMA IF NOT EXISTS app;
+            </sql>
 
-            <createSequence sequenceName="User_id_seq"
+
+            <createSequence schemaName="app"
+                            sequenceName="User_id_seq"
                             incrementBy="1"
                             startValue="1"
                             minValue="1"
+
                             maxValue="9223372036854775807"/>
 
-            <createTable tableName="users"  >
+            <createTable tableName="users"  schemaName="app">
                 <column name="id" type="bigint" defaultValueSequenceNext="User_id_seq">
                     <constraints primaryKey="true"
                                  primaryKeyName="User_pkey"
@@ -32,6 +38,8 @@
                     <constraints nullable="false"/>
                 </column>
             </createTable>
+
+
 
            </changeSet>
 </databaseChangeLog>

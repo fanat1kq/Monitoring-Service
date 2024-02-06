@@ -17,17 +17,16 @@ public class ReadingDAO {
      *
      * @return List<Indication>
      */
-    public static List<Indications> getActualCounter() {
+    public static List<Indications> getActualCounter(String user) {
         List<Indications> list = new ArrayList<>();
         String sql = "select name, value, date\n" +
-                    "from migration.indications \n" +
+                    "from app.indications \n" +
                     "where extract(month from date) in (select extract(month from max(date)) from migration.indications )\n" +
                     "  AND extract(year from date) in (select extract(YEAR from max(date)) from migration.indications );";
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-//                indic=new Indications();
                 indic.setName(resultSet.getString("name"));
                 indic.setValue(resultSet.getInt("value"));
                 indic.setDate(resultSet.getDate("date").toLocalDate());
@@ -54,7 +53,7 @@ public class ReadingDAO {
         Date date= Date.valueOf(LocalDate.of(year, month, day));
         List<Indications> list = new ArrayList<>();
         if (readings.contains(nameq)) {
-            String sql = "INSERT INTO migration.indications (name,value,date) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO app.indications (name,value,date) VALUES (?, ?, ?)";
 
             try (Connection connection = ConnectionManager.getConnection();
                  PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -85,14 +84,13 @@ public class ReadingDAO {
      */
     public static List<Indications> getCounterByMonth(int year, int month){
             List<Indications> list = new ArrayList<>();
-            String sql = "SELECT * FROM migration.indications WHERE EXTRACT(MONTH FROM date) =? and EXTRACT(YEAR FROM date) =?";
+            String sql = "SELECT * FROM app.indications WHERE EXTRACT(MONTH FROM date) =? and EXTRACT(YEAR FROM date) =?";
             try (Connection connection = ConnectionManager.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, month);
                 preparedStatement.setInt(2, year);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-//                    indic=new Indications();
                     indic.setName(resultSet.getString("name"));
                     indic.setValue(resultSet.getInt("value"));
                     indic.setDate(resultSet.getDate("date").toLocalDate());
@@ -115,12 +113,11 @@ public class ReadingDAO {
     public static List<Indications> getCounterStory(String role)  {
         if(role.equals("ADMIN")){
             List<Indications> list = new ArrayList<>();
-        String sql = "SELECT * FROM migration.indications ";
+        String sql = "SELECT * FROM app.indications ";
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-//                indic=new Indications();
                 indic.setName(resultSet.getString("name"));
                 indic.setValue(resultSet.getInt("value"));
                 indic.setDate(resultSet.getDate("date").toLocalDate());

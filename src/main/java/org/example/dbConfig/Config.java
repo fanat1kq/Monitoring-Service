@@ -47,4 +47,11 @@ import java.util.Properties;
         public static String getPassword() {
             return properties.getProperty("db.password");
         }
+        public static String getSchema() {
+            return properties.getProperty("liquibase.schemaName");
+        }
+        public static String getChangeLogFile() {
+            return properties.getProperty("liquibase.changeLogFile");
+        }
+
     }

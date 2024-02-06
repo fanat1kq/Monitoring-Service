@@ -6,14 +6,20 @@
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
         logicalFilePath="db/changelog.xml">
 
-        <changeSet id="2" author="fanat1kq">
-            <createSequence sequenceName="Indications_id_seq"
+        <changeSet id="2" author="fanat1kq" >
+
+            <sql>
+                CREATE SCHEMA IF NOT EXISTS app;
+            </sql>
+
+            <createSequence schemaName="app"
+                            sequenceName="Indications_id_seq"
                             incrementBy="1"
                             startValue="1"
                             minValue="1"
                             maxValue="9223372036854775807"/>
 
-            <createTable tableName="indications" >
+            <createTable tableName="indications" schemaName="app">
                 <column name="id" type="bigint" defaultValueSequenceNext="Indications_id_seq">
                     <constraints primaryKey="true"
                                  primaryKeyName="Indications_pkey"
@@ -25,10 +31,11 @@
                 <column name="value" type="BIGINT">
                     <constraints nullable="false"/>
                 </column>
-                <column name="date" type="TIMESTAMP">
+                <column name="date" type="timestamp without time zone">>
                     <constraints nullable="false"/>
                 </column>
             </createTable>
+
 
         </changeSet>
 </databaseChangeLog>

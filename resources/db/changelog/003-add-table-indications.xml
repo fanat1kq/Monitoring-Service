@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="3" author="fanat1kq">
-        <insert tableName="users">
+        <insert tableName="users" schemaName="app">
             <column  name="username"  value="admin"/>
             <column  name="password"  value="nimda"/>
             <column  name="role"  value="ADMIN"/>

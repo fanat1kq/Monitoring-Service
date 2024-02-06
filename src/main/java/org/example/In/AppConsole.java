@@ -62,10 +62,10 @@ public class AppConsole {
      * Menu of work with indications
      * @param role role of user
      */
-    public static void AppLoop(String role) throws ParseException {
+    public static void AppLoop(String user, String role) throws ParseException {
 
         while (true) {
-            System.out.println("Права доступа "+ role);
+            System.out.println("Привет "+ user+"! Права доступа "+ role);
             System.out.println("1.Получить актуальное показание");
             System.out.println("2.Подать показания");
             System.out.println("3.Получить показания в конкретный месяц");
@@ -77,7 +77,7 @@ public class AppConsole {
             int input = Integer.parseInt(scanner.nextLine().toLowerCase());
             switch (input) {
                 case 1:
-                    getActualCounter();
+                    getActualCounter(user);
                     break;
                 case 2:
                     System.out.println("Введите название показания из списка");
