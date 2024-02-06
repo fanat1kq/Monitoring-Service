@@ -11,7 +11,7 @@ import static org.example.In.AppConsole.readings;
  * Created by fanat1kq on 04/02/2024.
  */
 public class ReadingDAO {
-    public static Indications indic=new Indications();
+    public static final Indications indic=new Indications();
     /**
      * get actual counter
      *

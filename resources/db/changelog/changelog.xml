@@ -8,5 +8,5 @@
 
         <include file="001-create-table-users.xml" relativeToChangelogFile="true"/>
         <include file="002-create-table-indications.xml" relativeToChangelogFile="true"/>
-
+        <include file="003-add-table-indications.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

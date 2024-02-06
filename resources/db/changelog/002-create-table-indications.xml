@@ -5,11 +5,19 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
         logicalFilePath="db/changelog.xml">
+
         <changeSet id="2" author="fanat1kq">
+            <createSequence sequenceName="Indications_id_seq"
+                            incrementBy="1"
+                            startValue="1"
+                            minValue="1"
+                            maxValue="9223372036854775807"/>
 
             <createTable tableName="indications" >
-                <column name="id" type="BIGINT" autoIncrement="true">
-                    <constraints primaryKey="true" nullable="false"/>
+                <column name="id" type="bigint" defaultValueSequenceNext="Indications_id_seq">
+                    <constraints primaryKey="true"
+                                 primaryKeyName="Indications_pkey"
+                                 nullable="false"/>
                 </column>
                 <column name="name" type="VARCHAR(255)">
                     <constraints nullable="false"/>
@@ -21,6 +29,6 @@
                     <constraints nullable="false"/>
                 </column>
             </createTable>
-            <createSequence sequenceName="indications_id_seq" startValue="1" incrementBy="1"/>
+
         </changeSet>
 </databaseChangeLog>
