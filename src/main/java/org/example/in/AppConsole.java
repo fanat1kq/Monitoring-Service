@@ -1,48 +1,45 @@
-package org.example.In;
+package org.example.in;
 
-import org.example.model.User;
+import org.example.dao.ReadingDAO;
+import org.example.dao.UserDAO;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static org.example.dao.ReadingDAO.*;
-import static org.example.dao.UserDAO.createUser;
-import static org.example.dao.UserDAO.login;
 /**
  * main menu of App
  */
 public class AppConsole {
-    static public User user= new User();
-    static public List<String> readings=new ArrayList<>();
-    public static void startApp() throws ParseException {
+    public static List<String> readings=new ArrayList<>();
+    Scanner scanner= new Scanner(System.in);;
+    final ReadingDAO readingDAO = new ReadingDAO();
+    UserDAO userDAO;
+    public void startApp()  {
         while(true) {
             System.out.println("Внимание");
             System.out.println("нажмите цифру желаемого действия");
             System.out.println("1.Войти");
             System.out.println("2.Создать пользователя");
             System.out.println("3.Выйти");
-            Scanner scanner = new Scanner(System.in);
             int input = Integer.parseInt(scanner.nextLine().toLowerCase());
             switch (input) {
                 case 1:
-                    Scanner scan = new Scanner(System.in);
                     System.out.println("Введите пользователя и пароль:");
-                    String[] input1 = scan.nextLine().split(" ");
+                    String[] input1 = scanner.nextLine().split(" ");
                     if (input1.length<1){
                         System.out.println("невверный формат");
                     }
                     String name = input1[0];
                     String password = input1[1];
-                    login(name, password);
+                    userDAO=new UserDAO();
+                    userDAO.login(name, password);
                     break;
                 case 2:
                     System.out.println("Введите нового пользователя, пароль и права доступа(USER, ADMIN) и :");
                     System.out.println("Пример: юзер 123 ADMIN");
                     System.out.println("ввод производить через пробелы");
-                    Scanner sc = new Scanner(System.in);
-                    String[] input2 = sc.nextLine().split(" ");
+                    String[] input2 = scanner.nextLine().split(" ");
                     if (input2.length<3 ){
                         System.out.println("невверный формат");
                         continue;
@@ -50,7 +47,8 @@ public class AppConsole {
                     String name1=input2[0];
                     String password1=input2[1];
                     String role=input2[2];
-                    createUser(name1,password1,role);
+                    userDAO=new UserDAO();
+                    userDAO.createUser(name1,password1,role);
                     break;
                 case 3:
                     scanner.close();
@@ -62,7 +60,7 @@ public class AppConsole {
      * Menu of work with indications
      * @param role role of user
      */
-    public static void AppLoop(String user, String role) throws ParseException {
+    public void AppLoop(String user, String role, int idUSer) {
 
         while (true) {
             System.out.println("Привет "+ user+"! Права доступа "+ role);
@@ -77,7 +75,7 @@ public class AppConsole {
             int input = Integer.parseInt(scanner.nextLine().toLowerCase());
             switch (input) {
                 case 1:
-                    getActualCounter(user);
+                    readingDAO.getActualCounter(idUSer);
                     break;
                 case 2:
                     System.out.println("Введите название показания из списка");
@@ -94,7 +92,7 @@ public class AppConsole {
                     int day = Integer.parseInt(input3[0]);
                     int month = Integer.parseInt(input3[1]);
                     int year = Integer.parseInt(input3[2]);
-                    putCounter(name, value,  year, month,day);
+                    readingDAO.putCounter(name,idUSer, value,  year, month,day);
                     break;
                 case 3:
                     System.out.println("Введите месяц цифрой от 1 до 12");
@@ -103,16 +101,16 @@ public class AppConsole {
                     System.out.println("Введите год");
                     Scanner in2 = new Scanner(System.in);
                     int year1 = Integer.parseInt(in2.nextLine());
-                    getCounterByMonth(year1, month1);
+                    readingDAO.getCounterByMonth(year1, month1,idUSer);
                     break;
                 case 4:
-                    getCounterStory(role);
+                    readingDAO.getCounterStory(role);
                     break;
                 case 5:
                     System.out.println("Введите новый вид показания");
                     Scanner scanner4 = new Scanner(System.in);
                     String readingName = scanner4.nextLine().toLowerCase();
-                    addList(readingName);
+                    readingDAO.addList(readingName);
                     break;
                 case 6:
                     startApp();

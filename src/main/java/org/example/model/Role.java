@@ -1,4 +1,4 @@
-package org.example.enumerates;
+package org.example.model;
 
 /**
  * Created by fanat1kq on 04/02/2024.

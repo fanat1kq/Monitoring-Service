@@ -1,4 +1,4 @@
-package org.example.dbConfig;
+package org.example.dbconfig;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

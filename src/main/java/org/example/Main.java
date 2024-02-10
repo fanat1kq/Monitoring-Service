@@ -1,10 +1,11 @@
 package org.example;
 
 
+import org.example.dao.ReadingDAO;
+import org.example.in.AppConsole;
 import org.example.liquibase.Liquibase;
 
 import java.text.ParseException;
-import static org.example.In.AppConsole.startApp;
 import static org.example.dao.ReadingDAO.*;
 
 
@@ -17,11 +18,12 @@ public class Main {
 
 
     public static void main(String[] args) throws ParseException{
-        while(true) {
-            Liquibase liquibase=new org.example.liquibase.Liquibase();
+            Liquibase liquibase=new Liquibase();
             liquibase.start();
-            defalt();
-            startApp();
+            ReadingDAO readingDAO= new ReadingDAO();
+            readingDAO.defalt();
+            AppConsole appConsole= new AppConsole();
+            appConsole.startApp();
         }
     }
-    }
+
