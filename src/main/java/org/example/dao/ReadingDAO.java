@@ -11,8 +11,13 @@ import java.util.List;
  * Created by fanat1kq on 04/02/2024.
  */
 public class ReadingDAO {
+    private final ConnectionManager connectionManager;
     public static final Indications indic=new Indications();
     public List<String> readings= new ArrayList<>();
+
+    public ReadingDAO(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
 
     /**
      * get actual counter
@@ -21,10 +26,12 @@ public class ReadingDAO {
      */
     public List<Indications> getActualCounter(int userId) {
         List<Indications> list = new ArrayList<>();
-        String sql = "select name, value, date\n" +
-                "from app.indications \n" +
-                "where extract(month from date) in (select extract(month from max(date)) from app.indications )\n" +
-                "  AND extract(year from date) in (select extract(YEAR from max(date)) from app.indications ) and id_ind_user=?";
+        String sql = """
+                select name, value, date
+                from app.indications
+                where extract(month from date) in (select extract(month from max(date)) from app.indications )
+                AND extract(year from date) in (select extract(YEAR from max(date)) from app.indications ) and id_ind_user=?
+                """;
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
@@ -52,21 +59,20 @@ public class ReadingDAO {
      * @param month  get month of Indication
      * @param day  get day of Indication
      */
-    public List<Indications> putCounter(String nameq, int idUser, int value, int year, int month, int day)  {
-        LocalDate date= LocalDate.of(year, month, day);
+    public List<Indications> putCounter(Indications indications)  {
         List<Indications> list = new ArrayList<>();
 //        if (readings.contains(nameq)) {
             String sql = "INSERT INTO app.indications (id_ind_user,name,value,date) VALUES (?, ?, ?, ?)";
 
             try (Connection connection = ConnectionManager.getConnection();
                  PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setInt(1, idUser);
-                statement.setString(2, nameq);
-                statement.setInt(3, value);
-                statement.setDate(4, Date.valueOf(date));
-                indic.setName(nameq);
-                indic.setValue(value);
-                indic.setDate(date);
+//                statement.setInt(1, idUser);
+                statement.setString(2, indications.getName());
+                statement.setInt(3, indications.getValue());
+                statement.setDate(4, Date.valueOf(indications.getDate()));
+                indic.setName(indications.getName());
+                indic.setValue(indications.getValue());
+                indic.setDate(indications.getDate());
                 list.add(indic);
                 statement.executeUpdate();
                 return list;

@@ -47,6 +47,9 @@ import java.util.Properties;
         public static String getPassword() {
             return properties.getProperty("db.password");
         }
+        public static String getDriver() {
+            return properties.getProperty("db.driver");
+        }
         public static String getSchema() {
             return properties.getProperty("liquibase.schemaName");
         }
