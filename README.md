@@ -48,19 +48,24 @@ Liquibase
 API Endpoints
 
 POST /registration: Регистрация нового пользователя.
+
 {
   "login": "login",
   "password": "password",
   "role": "role"
 }
 POST /login: Авторизация пользователя.
+
 {
   "login": "login",
   "password": "password"
 }
 GET /reading/history: Получение всех показаний счетчиков.
+
 GET /reading/actual: Получение актуальных показаний счетчиков.
+
 POST /reading/put: Подача новых показаний счетчика.
+
 {
  "name": "отопление",
   "value": 192101,
