@@ -54,6 +54,7 @@ POST /registration: Регистрация нового пользователя
   "password": "password",
   "role": "role"
 }
+
 POST /login: Авторизация пользователя.
 
 {
