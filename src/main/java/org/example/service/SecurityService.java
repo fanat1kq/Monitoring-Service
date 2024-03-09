@@ -48,15 +48,6 @@ public class SecurityService {
 //    @Audit
 
     public JwtResponse authorization(String login, String password) {
-//        Optional<User> optionalPlayer = userDAO.findByLogin(login);
-//        if (optionalPlayer.isEmpty()) {
-//            throw new AuthorizeException("There is no user with this login in the database.");
-//        }
-
-//        User user = optionalPlayer.get();
-//        if (!user.getPassword().equals(password)) {
-//            throw new AuthorizeException("Incorrect password.");
-//        }
 
         String accessToken = tokenProvider.createAccessToken(login);
         String refreshToken = tokenProvider.createRefreshToken(login);

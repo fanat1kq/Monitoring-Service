@@ -3,13 +3,13 @@ package org.example.exception;
 /**
  * The type Player already exists exception.
  */
-public class PlayerAlreadyExistsException extends RuntimeException {
+public class UsersAlreadyExistsException extends RuntimeException {
     /**
      * Instantiates a new Player already exists exception.
      *
      * @param message the message
      */
-    public PlayerAlreadyExistsException(String message) {
+    public UsersAlreadyExistsException(String message) {
         super(message);
     }
 }

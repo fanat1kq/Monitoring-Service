@@ -13,8 +13,8 @@ public class JwtTokenFilter implements Filter {
     private ServletContext servletContext;
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        this.servletContext = filterConfig.getServletContext();
-        jwtTokenProvider = (JwtTokenProvider) servletContext.getAttribute("tokenProvider");
+        this.servletContext = filterConfig.getServletContext();//для доступа к аттрибутам
+        jwtTokenProvider = (JwtTokenProvider) servletContext.getAttribute("tokenProvider");//получаем аттрибут
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.util.Properties;
      * Class Config is configuration of DB
      * Config use for get URL, name of user and password for connection with DB
      */
+    //get, set, load
     public class Config {
 
         private static Properties properties;

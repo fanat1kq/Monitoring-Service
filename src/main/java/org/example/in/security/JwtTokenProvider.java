@@ -10,7 +10,7 @@ import org.example.in.dto.JwtResponse;
 import java.nio.file.AccessDeniedException;
 import java.security.Key;
 import java.util.Date;
-
+//создает 2 токена, проверка,
 public class JwtTokenProvider {
     private final Long access;
     private final Long refresh;

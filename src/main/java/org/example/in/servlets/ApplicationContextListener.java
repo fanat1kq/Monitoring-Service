@@ -24,14 +24,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-@WebListener
-public class ApplicationContextListener implements ServletContextListener {
+@WebListener//для добавление аттрибутов в контекст сервлетов
+    public class ApplicationContextListener implements ServletContextListener {
 
     private Properties properties;
     private ConnectionManager connectionManager;
 
     @Override
-    public void contextInitialized(ServletContextEvent sce) {
+    public void contextInitialized(ServletContextEvent sce) {//1 для запуска
         final ServletContext servletContext = sce.getServletContext();
 
         loadProperties(servletContext);
@@ -39,29 +39,38 @@ public class ApplicationContextListener implements ServletContextListener {
         serviceContextInit(servletContext);
 
         ObjectMapper jacksonMapper = new ObjectMapper();
+        jacksonMapper.findAndRegisterModules(); //для работы с датой в json
         servletContext.setAttribute("jacksonMapper", jacksonMapper);
         servletContext.setAttribute("userMapper", UserMapper.INSTANCE);
-        servletContext.setAttribute("transactionMapper", IndicationsMapper.INSTANCE);
+        servletContext.setAttribute("indicationsMapper", IndicationsMapper.INSTANCE);
     }
+    //1 для окончания
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         ServletContextListener.super.contextDestroyed(sce);
     }
 
+    private void loadProperties(ServletContext servletContext) {
+        if (properties == null) {
+            properties = new Properties();
+            try {//для достпупа к проперти
+                properties.load(servletContext.getResourceAsStream("/WEB-INF/classes/application.properties"));
+                servletContext.setAttribute("servletProperties", properties);
+            }catch (FileNotFoundException e ) {
+                throw new RuntimeException("Property file not found!");
+            } catch (IOException e) {
+                throw new RuntimeException("Error reading configuration file: " + e.getMessage());
+            }
+        }
+    }
     private void databaseConfiguration(ServletContext servletContext) {
         String dbUrl = properties.getProperty("db.url");
-        String dbUser = properties.getProperty("db.user");
+        String dbUser = properties.getProperty("db.username");
         String dbPassword = properties.getProperty("db.password");
         String dbDriver = properties.getProperty("db.driver");
         connectionManager = new ConnectionManager(dbUrl, dbUser, dbPassword, dbDriver);
         servletContext.setAttribute("connectionProvider", connectionManager);
-
-//        String changeLogFile = properties.getProperty("liquibase.changeLogFile");
-//        String schemaName = properties.getProperty("liquibase.schemaName");
-
-//        DBMigrationService migrationService = new DBMigrationService(connectionManager, schemaName, changeLogFile);
-//        migrationService.migration();
         Liquibase migrationService=new Liquibase();
         servletContext.setAttribute("migrationService", migrationService);
     }
@@ -73,8 +82,8 @@ public class ApplicationContextListener implements ServletContextListener {
         UserService userService = new UserService(userDAO);
         JwtTokenProvider tokenProvider = new JwtTokenProvider(
                 properties.getProperty("jwt.secret"),
-                Long.parseLong(properties.getProperty("jwt.access")),
-                Long.parseLong(properties.getProperty("jwt.refresh")),
+                Long.parseLong(properties.getProperty("jwt.access")),//60 минут
+                Long.parseLong(properties.getProperty("jwt.refresh")),//180 дней
                 userService
         );
 
@@ -88,17 +97,5 @@ public class ApplicationContextListener implements ServletContextListener {
         servletContext.setAttribute("readingService", readingService);
     }
 
-    private void loadProperties(ServletContext servletContext) {
-        if (properties == null) {
-            properties = new Properties();
-            try {
-                properties.load(servletContext.getResourceAsStream("/WEB-INF/classes/application.properties"));
-                servletContext.setAttribute("servletProperties", properties);
-            }catch (FileNotFoundException e ) {
-                throw new RuntimeException("Property file not found!");
-            } catch (IOException e) {
-                throw new RuntimeException("Error reading configuration file: " + e.getMessage());
-            }
-        }
-    }
+
 }

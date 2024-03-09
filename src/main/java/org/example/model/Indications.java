@@ -19,5 +19,9 @@ public class Indications {
     private Integer value;
     private LocalDate date;
 
-
+    public Indications(String name, Integer value, LocalDate date) {
+        this.name = name;
+        this.value = value;
+        this.date = date;
+    }
 }

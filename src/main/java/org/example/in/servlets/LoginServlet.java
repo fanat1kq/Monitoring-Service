@@ -31,12 +31,13 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try(ServletInputStream inputStream = req.getInputStream()) {
+            //передача с json через дто
             SecurityDTO securityDTO = jacksonMapper.readValue(inputStream, SecurityDTO.class);
-
+            //авторизация с токен
             JwtResponse response = securityService.authorization(securityDTO.login(), securityDTO.password());
-
+            //вывод все ок
             resp.setStatus(HttpServletResponse.SC_ACCEPTED);
-            jacksonMapper.writeValue(resp.getWriter(), response);
+            jacksonMapper.writeValue(resp.getWriter(), response);//сериализация ответа
         } catch (JsonParseException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             jacksonMapper.writeValue(resp.getWriter(), new ExceptionResponse(e.getMessage()));

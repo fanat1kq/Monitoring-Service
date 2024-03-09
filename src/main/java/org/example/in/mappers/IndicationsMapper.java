@@ -11,6 +11,7 @@ import java.util.List;
 @Mapper
 public interface IndicationsMapper {
 
+
     IndicationsMapper INSTANCE = Mappers.getMapper(IndicationsMapper.class);
 
     Indications toEntity(IndicationsDTO dto);

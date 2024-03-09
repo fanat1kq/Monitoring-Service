@@ -26,31 +26,31 @@ public class UserDAO {
      * login
      * @exception ParseException
      */
-    public  boolean login(String userName, String UserPassword) {
-        String sql = "SELECT * FROM app.users WHERE username = ? AND password = ?";
-        try ( Connection connection = ConnectionManager.getConnection();
-              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, userName);
-            statement.setString(2, UserPassword);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                int count  = resultSet.getInt(1);
-                if (count > 0) {
-                    String role= resultSet.getString("role");
-                    String user= resultSet.getString("username");
-                    int idUser=resultSet.getInt("id");
-                    System.out.println("Авторизация успешна!");
-                    return true;
-                } else {
-                    System.out.println("Неверный логин или пароль.");
-                }
-
-            }
-        } catch (SQLException e) {
-            System.out.println("Ошибка аунтификации игрока: " + e.getMessage());
-        }
-        return false;
-    }
+//    public  boolean login(String userName, String UserPassword) {
+//        String sql = "SELECT * FROM app.users WHERE username = ? AND password = ?";
+//        try ( Connection connection = ConnectionManager.getConnection();
+//              PreparedStatement statement = connection.prepareStatement(sql)) {
+//            statement.setString(1, userName);
+//            statement.setString(2, UserPassword);
+//            ResultSet resultSet = statement.executeQuery();
+//            if (resultSet.next()) {
+//                int count  = resultSet.getInt(1);
+//                if (count > 0) {
+//                    String role= resultSet.getString("role");
+//                    String user= resultSet.getString("username");
+//                    int idUser=resultSet.getInt("id");
+//                    System.out.println("Авторизация успешна!");
+//                    return true;
+//                } else {
+//                    System.out.println("Неверный логин или пароль.");
+//                }
+//
+//            }
+//        } catch (SQLException e) {
+//            System.out.println("Ошибка аунтификации игрока: " + e.getMessage());
+//        }
+//        return false;
+//    }
 
     /**
      * create user
@@ -77,7 +77,7 @@ public class UserDAO {
      */
     public Optional<User> findByLogin(String login) {
         Optional<User> optionalUser = Optional.empty();
-        String sql = "SELECT * FROM app.users WHERE  WHERE username=?";
+        String sql = "SELECT * FROM app.users  WHERE username=?";
         try(Connection connection = ConnectionManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, login);
@@ -94,10 +94,12 @@ public class UserDAO {
     }
     private User getPlayerFromResultSet(ResultSet resultSet) throws SQLException {
         User user = new User();
-        String login = resultSet.getString("login");
+        int id=resultSet.getInt("id");
+        String login = resultSet.getString("username");
         String password = resultSet.getString("password");
         Role role = Role.valueOf(resultSet.getString("role"));
 
+        user.setId(id);
         user.setName(login);
         user.setPassword(password);
         user.setRole(role);

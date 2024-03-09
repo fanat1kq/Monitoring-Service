@@ -2,10 +2,12 @@ package org.example.dao;
 
 import org.example.dbconfig.ConnectionManager;
 import org.example.model.Indications;
+import org.example.model.Role;
+
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by fanat1kq on 04/02/2024.
@@ -25,7 +27,7 @@ public class ReadingDAO {
      * @return List<Indication>
      */
     public List<Indications> getActualCounter(int userId) {
-        List<Indications> list = new ArrayList<>();
+        List<Indications> all = new ArrayList<>();
         String sql = """
                 select name, value, date
                 from app.indications
@@ -37,14 +39,11 @@ public class ReadingDAO {
             preparedStatement.setInt(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                indic.setName(resultSet.getString("name"));
-                indic.setValue(resultSet.getInt("value"));
-                indic.setDate(resultSet.getDate("date").toLocalDate());
-                list.add(indic);
+                all = List.of(getParametrsFromResultSet(resultSet));
+
             }
             resultSet.close();
-            System.out.println(list);
-            return list;
+            return all;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -59,31 +58,25 @@ public class ReadingDAO {
      * @param month  get month of Indication
      * @param day  get day of Indication
      */
-    public List<Indications> putCounter(Indications indications)  {
-        List<Indications> list = new ArrayList<>();
-//        if (readings.contains(nameq)) {
+    public Indications putCounter(Indications indications)  {
             String sql = "INSERT INTO app.indications (id_ind_user,name,value,date) VALUES (?, ?, ?, ?)";
 
             try (Connection connection = ConnectionManager.getConnection();
                  PreparedStatement statement = connection.prepareStatement(sql)) {
-//                statement.setInt(1, idUser);
+                statement.setInt(1, indications.getIndicationsId());
                 statement.setString(2, indications.getName());
                 statement.setInt(3, indications.getValue());
                 statement.setDate(4, Date.valueOf(indications.getDate()));
+                indic.setIndicationsId(indications.getIndicationsId());
                 indic.setName(indications.getName());
                 indic.setValue(indications.getValue());
                 indic.setDate(indications.getDate());
-                list.add(indic);
                 statement.executeUpdate();
-                return list;
+                return indic;
             } catch (SQLException e) {
                 throw new RuntimeException("Ошибка при сохранении " + e.getMessage());
             }
-//        }
-//        else {
-//            System.out.println("такого нет");
-//        }
-//        return null;
+
     }
     /**
      * get counter by month
@@ -102,13 +95,9 @@ public class ReadingDAO {
                 preparedStatement.setInt(3, userId);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    indic.setName(resultSet.getString("name"));
-                    indic.setValue(resultSet.getInt("value"));
-                    indic.setDate(resultSet.getDate("date").toLocalDate());
-                    list.add(indic);
+                    list.add(getParametrsFromResultSet(resultSet));
                 }
                 resultSet.close();
-                System.out.println(list);
                 return list;
 
             } catch (SQLException e) {
@@ -121,28 +110,35 @@ public class ReadingDAO {
      * @return Hashmap of indications
      * @param role get role of user
      */
-    public  List<Indications> getCounterStory(String role)  {
-        if(role.equals("ADMIN")){
-            List<Indications> list = new ArrayList<>();
+    public  List<Indications> getCounterStory(Role role)  {
+        List<Indications> all = new ArrayList<>();
+        if(role.equals(Role.ADMIN)){
         String sql = "SELECT * FROM app.indications ";
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                indic.setName(resultSet.getString("name"));
-                indic.setValue(resultSet.getInt("value"));
-                indic.setDate(resultSet.getDate("date").toLocalDate());
-                list.add(indic);
+                all.add(getParametrsFromResultSet(resultSet));
             }
             resultSet.close();
-            System.out.println(list);
-            return list;
+
+            return all;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }}
         else System.out.println("у вас нет прав просмотра");
         return null;
     }
+
+    private Indications getParametrsFromResultSet(ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt("id");
+        String name = resultSet.getString("name");
+        int value = resultSet.getInt("value");
+        LocalDate date = resultSet.getDate("date").toLocalDate();
+        return new Indications(id,name, value,date);
+    }
+
+
     /**
      * add new name of indication in DB
      */

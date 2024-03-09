@@ -18,14 +18,13 @@ import org.example.service.UserService;
 import org.example.exception.*;
 import org.example.in.dto.ExceptionResponse;
 import org.example.in.dto.SuccessResponse;
-import org.example.in.dto.TransactionHistoryResponse;
-import org.example.in.dto.TransactionRequest;
+import org.example.in.dto.ReadingHistoryResponse;
+import org.example.in.dto.PuttingRequest;
 import org.example.model.User;
 
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 @WebServlet("/reading/*")
 public class ReadingServlet extends HttpServlet {
@@ -45,10 +44,13 @@ public class ReadingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Authentication authentication = (Authentication) getServletContext().getAttribute("authentication");
+
         if (authentication.isAuth()) {
             try {
-                if (req.getRequestURI().endsWith("/history")) {
+                if (req.getRequestURI().endsWith("/actual")) {
                     indicationsHistoryProcess(req, resp, authentication);
+                } else if (req.getRequestURI().endsWith("/all")) {
+                    showHistoryProcess(req, resp, authentication);
                 }
             } catch (PlayerNotFoundException | ValidationParametersException e) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -71,23 +73,18 @@ public class ReadingServlet extends HttpServlet {
         Authentication authentication = (Authentication) getServletContext().getAttribute("authentication");
         if (authentication.isAuth()) {
             try(ServletInputStream inputStream = req.getInputStream()) {
-                TransactionRequest request = jacksonMapper.readValue(inputStream, TransactionRequest.class);
-
-                requestValidation(request);
-
-                User user = userService.getByLogin(request.getPlayerLogin());
-                Indications indications = new Indications();
+                PuttingRequest request = jacksonMapper.readValue(inputStream, PuttingRequest.class);//получение с Json(десер-я)
+                requestValidation(request); //проверка объекта
+                User user = userService.getByLogin(request.getUserName());//получение полльзователя для проверки
                 if (!authentication.getLogin().equals(user.getName())) throw new AuthorizeException("Incorrect credentials.");
-
-
                 String requestURI = req.getRequestURI();//что в юрл запостили
                 if (requestURI.endsWith("/put")) {
-                    readingService.putReading(indications.getName(),indications.getIndicationsId(),  indications.getValue(), indications.getDate());//вызов метода
+                    readingService.putReading(request.getName(),user.getId(),  request.getValue(), request.getDate());//вызов метода
                 }
 
                 resp.setStatus(HttpServletResponse.SC_OK);
-                jacksonMapper.writeValue(resp.getWriter(), new SuccessResponse("Transaction completed successfully!"));//если удачно
-            } catch (PlayerNotFoundException | TransactionAlreadyExistsException | JsonParseException e) {
+                jacksonMapper.writeValue(resp.getWriter(), new SuccessResponse("Putting data completed successfully!"));//если удачно
+            } catch (PlayerNotFoundException | ReadingAlreadyExistsException | JsonParseException e) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 jacksonMapper.writeValue(resp.getWriter(), new ExceptionResponse(e.getMessage()));
             } catch (AuthorizeException e) {
@@ -103,10 +100,10 @@ public class ReadingServlet extends HttpServlet {
         }
     }
 
-    private void requestValidation(TransactionRequest request) throws ValidationParametersException {
-        if (request.getPlayerLogin()==null || request.getPlayerLogin().isBlank()) {
+    private void requestValidation(PuttingRequest request) throws ValidationParametersException {
+        if (request.getUserName()==null || request.getUserName().isBlank()) {
             throw new ValidationParametersException("Player login must not be null or empty.");
-        } else if (request.getAmount().signum() == -1) {
+        } else if (request.getValue()< 0) {
             throw new ValidationParametersException("Transaction's amount must not be negative.");
         }
     }
@@ -117,7 +114,20 @@ public class ReadingServlet extends HttpServlet {
         User user = userService.getByLogin(login);
         if (!authentication.getLogin().equals(user.getName())) throw new AuthorizeException("Incorrect credentials.");
         List<Indications> userHistory = readingService.getUserHistory(user.getId());
-        TransactionHistoryResponse response = new TransactionHistoryResponse(user.getName(), indicationsMapper.toDTOList(userHistory));
+        ReadingHistoryResponse response = new ReadingHistoryResponse(user.getName(), indicationsMapper.toDTOList(userHistory));
+        resp.setStatus(HttpServletResponse.SC_OK);
+        jacksonMapper.writeValue(resp.getWriter(), response);
+    }
+
+    private void showHistoryProcess(HttpServletRequest req, HttpServletResponse resp, Authentication authentication) throws ValidationParametersException, IOException {
+        String login = req.getParameter("login");
+        if (login == null) throw new ValidationParametersException("Login parameter is null!");
+        User entity = userService.getByLogin(login);
+        if (!authentication.getLogin().equals(entity.getName())) throw new AuthorizeException("Incorrect credentials.");
+
+        List<Indications> userHistory = readingService.getAllHistory(entity.getRole());
+        ReadingHistoryResponse response = new ReadingHistoryResponse(entity.getName(), indicationsMapper.toDTOList(userHistory));
+
         resp.setStatus(HttpServletResponse.SC_OK);
         jacksonMapper.writeValue(resp.getWriter(), response);
     }

@@ -1,24 +1,12 @@
 package org.example.in.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO {
-
     private String name;
 
-    public UserDTO(String name) {
-        this.name = name;
-    }
 
-    public UserDTO() {
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
