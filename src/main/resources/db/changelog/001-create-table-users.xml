@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
+        logicalFilePath="db/changelog.xml">
+        <changeSet id="1" author="fanat1kq">
+
+            <createTable tableName="users"  schemaName="app">
+                <column name="id" type="bigint" defaultValueComputed="nextval('app.user_id_seq')">
+                    <constraints primaryKey="true"
+                                 primaryKeyName="User_pkey"
+                                 nullable="false"/>
+                </column>
+                <column name="username" type="VARCHAR(255)">
+                    <constraints nullable="false"
+                                 unique="true"
+                                 uniqueConstraintName="user_unique"/>
+                </column>
+                <column name="password" type="VARCHAR(255)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="role" type="VARCHAR(255)">
+                    <constraints nullable="false"/>
+                </column>
+            </createTable>
+           </changeSet>
+</databaseChangeLog>
