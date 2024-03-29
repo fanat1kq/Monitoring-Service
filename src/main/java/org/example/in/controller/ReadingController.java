@@ -103,9 +103,9 @@ public class ReadingController {
     @ApiOperation(value = "add new reading", response = SuccessResponse.class, tags = "put")
     @PostMapping("/put")
     public ResponseEntity<?> put(@RequestBody @Valid PuttingRequest request) {
-        if (!isValidLogin(request.getUserName())) return ResponseEntity.badRequest()
+        if (!isValidLogin(request.getLogin())) return ResponseEntity.badRequest()
                 .body(new ExceptionResponse("Incorrect login"));
-        org.example.model.User player = userService.getByLogin(request.getUserName());
+        org.example.model.User player = userService.getByLogin(request.getLogin());
         readingService.putReading(request.getName(), player.getId(), request.getValue(),request.getDate());
         return ResponseEntity.ok(new SuccessResponse("Putting reading completed successfully!"));
     }

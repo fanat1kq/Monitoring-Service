@@ -277,6 +277,11 @@
       <version>${spring-framework.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjtools</artifactId>
+      <version>1.9.21</version>
+    </dependency>
   </dependencies>
 
   <build>
