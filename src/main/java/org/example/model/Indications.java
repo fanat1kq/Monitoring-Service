@@ -1,12 +1,22 @@
 package org.example.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import org.springframework.format.annotation.DateTimeFormat;
+
+
 import java.time.LocalDate;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 /**
  * Created by fanat1kq on 04/02/2024.
@@ -29,8 +39,17 @@ public class Indications {
     @Column(name = "user_id")
     private Long userId;
     @Column(name = "value")
+    @JdbcTypeCode(SqlTypes.BIGINT)
     private Integer value;
     @Column(name = "date")
+    @JdbcTypeCode(SqlTypes.TIMESTAMP)
+//    @Temporal(TemporalType.TIMESTAMP)
+//    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+//    @Basic
+//    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+//    @JsonSerialize(using = LocalDateTimeSerializer.class)
+//    @JsonProperty("last_charge_date")
+//    @Column (columnDefinition = "DATE")
     private LocalDate date;
 
     @Override

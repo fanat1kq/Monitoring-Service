@@ -1,9 +1,8 @@
 package org.example.in.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.SwaggerDefinition;
-import io.swagger.annotations.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,7 +18,6 @@ import org.example.in.mappers.IndicationsMapper;
 import org.example.service.UserService;
 import org.example.service.ReadingService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -28,10 +26,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/reading")
 @Validated
-@Api(value = "UserController" , tags = {"User Controller"})
-@SwaggerDefinition(tags = {
-        @Tag(name = "User Controller")
-})
+@Tag(name = "User controller", description = "User API")
+
 public class ReadingController {
 
     private final UserService userService;
@@ -56,9 +52,9 @@ public class ReadingController {
         this.securityContext = securityContext;
     }
 
-    @ApiOperation(value = "Return the player's transactions history", response = ReadingHistoryResponse.class, tags = "getActual")
+    @Operation(summary  = "Return the player's transactions history")
     @GetMapping("/actual")
-    public ResponseEntity<?> getAcrual(@RequestParam String login) {
+    public ResponseEntity<?> getActual(@RequestParam String login) {
         if (!isValidLogin(login)) return ResponseEntity.badRequest()
                 .body(new ExceptionResponse("Incorrect login"));
         org.example.model.User user = userService.getByLogin(login);
@@ -73,7 +69,7 @@ public class ReadingController {
      * @param login the player login
      * @return response entity
      */
-    @ApiOperation(value = "Return all history", response = ReadingHistoryResponse.class, tags = "getHistory")
+    @Operation(summary  = "Return all history")
     @GetMapping("/history")
     public ResponseEntity<?> getHistory(@RequestParam String login) {
         if (!isValidLogin(login)) return ResponseEntity.badRequest()
@@ -85,7 +81,7 @@ public class ReadingController {
     }
 
     @GetMapping("/date")
-    @ApiOperation(value = "Show all meter readings by date", response = List.class)
+    @Operation(summary  = "Show all meter readings by date")
     public ResponseEntity<?> showAllMeterReadings(
             @RequestParam Integer year,
             @RequestParam Integer month,
@@ -100,7 +96,7 @@ public class ReadingController {
     }
 
 
-    @ApiOperation(value = "add new reading", response = SuccessResponse.class, tags = "put")
+    @Operation(summary  = "add new reading")
     @PostMapping("/put")
     public ResponseEntity<?> put(@RequestBody @Valid PuttingRequest request) {
         if (!isValidLogin(request.getLogin())) return ResponseEntity.badRequest()
@@ -109,7 +105,6 @@ public class ReadingController {
         readingService.putReading(request.getName(), player.getId(), request.getValue(),request.getDate());
         return ResponseEntity.ok(new SuccessResponse("Putting reading completed successfully!"));
     }
-    //sdaфыввыф
 
 
     private boolean isValidLogin(String login) {

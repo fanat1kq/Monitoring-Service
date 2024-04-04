@@ -1,12 +1,13 @@
 package org.example.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.Objects;
 
@@ -38,6 +39,7 @@ public class User {
 
     @NotNull
     private String password;
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private Role role;
 
     public User(String login, String password, Role role) {

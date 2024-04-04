@@ -1,8 +1,8 @@
 package org.example.in.dto;
 
+import jakarta.validation.constraints.NotNull;
 import org.example.model.Role;
 
-import javax.validation.constraints.NotNull;
 
 /**
  * Request data for security
